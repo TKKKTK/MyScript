@@ -28,7 +28,6 @@ import com.myscript.iink.uireferenceimplementation.EditorBinding
 import com.myscript.iink.uireferenceimplementation.FontUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 
 class DemoModule(application: Application) {

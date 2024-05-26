@@ -43,7 +43,7 @@ task DownloadAndExtractAssets(type: Copy) {
     def mathConf = new File(targetDir, "conf/math.conf")
     def textConf = new File(targetDir, "conf/en_US.conf")
 
-    if (!diagramConf.exists() || !rawContentConf.exists() || !mathConf.exists() || !textConf.exists()) {
+    //if (!diagramConf.exists() || !rawContentConf.exists() || !mathConf.exists() || !textConf.exists()) {
         def tmpAssetsDir = new File(projectDir, "tmp-assets/")
         def zipDir = new File(tmpAssetsDir, "zips")
 
@@ -53,16 +53,16 @@ task DownloadAndExtractAssets(type: Copy) {
         if (!zipDir.isDirectory())
             zipDir.mkdirs()
 
-        sourceUrls.each { sourceUrl ->
-            ant.get(src: sourceUrl, dest: zipDir.getPath())
-        }
+//        sourceUrls.each { sourceUrl ->
+//            ant.get(src: sourceUrl, dest: zipDir.getPath())
+//        }
 
         File[] zipFiles = FileUtils.listFiles(zipDir, FileFilterUtils.suffixFileFilter("zip"), FileFilterUtils.trueFileFilter())
         zipFiles.each { File zipFile ->
             from zipTree(zipFile)
             into tmpAssetsDir
         }
-    }
+   // }
 }
 
 task CopyAssets(type: Copy, dependsOn: DownloadAndExtractAssets) {

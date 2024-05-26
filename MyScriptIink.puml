@@ -1,0 +1,462 @@
+@startuml
+class com.myscript.iink.uireferenceimplementation.FrameTimeEstimator {
+- {static} float LEGACY_FRAME_TIME_MS
+- {static} float MS_IN_A_SECOND
++ {static} float getFrameTime(Context)
+- {static} Display getDisplayForContext(Context)
+- {static} float getFastestFrameTimeMs(Context)
+}
+
+
+class com.myscript.iink.uireferenceimplementation.FrameTimeEstimator$Api21Impl {
+~ {static} float getFastestFrameTimeMs(Display)
+}
+
+class com.myscript.iink.uireferenceimplementation.FrameTimeEstimator$Api23Impl {
+~ {static} float getFastestFrameTimeMs(Display)
+}
+
+class com.myscript.iink.uireferenceimplementation.FrameTimeEstimator$Api30Impl {
+~ {static} Display getDisplayForContext(Context)
+}
+
+class com.myscript.iink.uireferenceimplementation.EditorView {
+- int viewWidth
+- int viewHeight
+- Renderer renderer
+- Editor editor
+- ImageLoader imageLoader
+- OfflineSurfaceManager offlineSurfaceManager
+- LayerView layerView
+- Map<String,Typeface> typefaceMap
+# void onFinishInflate()
++ void setEditor(Editor)
++ Editor getEditor()
++ Renderer getRenderer()
++ void setImageLoader(ImageLoader)
++ void setTypefaces(Map<String,Typeface>)
++ Map<String,Typeface> getTypefaces()
++ ImageLoader getImageLoader()
+# void onSizeChanged(int,int,int,int)
++ void invalidate(Renderer,EnumSet<LayerType>)
++ void invalidate(Renderer,int,int,int,int,EnumSet<LayerType>)
++ void invalidate()
++ void invalidate(int,int,int,int)
++ void invalidate(Rect)
++ boolean supportsOffscreenRendering()
++ float getPixelDensity()
++ int createOffscreenRenderSurface(int,int,boolean)
++ void releaseOffscreenRenderSurface(int)
++ ICanvas createOffscreenRenderCanvas(int)
++ void showScrollbars()
+}
+
+
+class com.myscript.iink.uireferenceimplementation.LayerView {
+- {static} int MODEL
+- {static} int CAPTURE
+- ImageLoader imageLoader
+- Map<String,Typeface> typefaceMap
+- Renderer lastRenderer
+- OfflineSurfaceManager offlineSurfaceManager
+- Renderer renderer
+- Rect updateArea
+- Rect localUpdateArea
+- Bitmap bitmap
+- android.graphics.Canvas sysCanvas
+- Canvas iinkCanvas
+- int pageWidth
+- int pageHeight
+- int viewWidth
+- int viewHeight
+- int canvasWidth
+- int canvasHeight
+- int xMin
+- int yMin
++ void setRenderTarget(IRenderTarget)
++ void setOfflineSurfaceManager(OfflineSurfaceManager)
++ void setEditor(Editor)
++ void setImageLoader(ImageLoader)
++ void setCustomTypefaces(Map<String,Typeface>)
+# void onDraw(android.graphics.Canvas)
+# void onSizeChanged(int,int,int,int)
+- void prepare(android.graphics.Canvas,Rect)
+- void restore(android.graphics.Canvas)
++ void update(Renderer,int,int,int,int,EnumSet<LayerType>)
++ void setScrollbar(Renderer,int,int,int,int,int,int)
+# int computeVerticalScrollRange()
+# int computeVerticalScrollExtent()
+# int computeVerticalScrollOffset()
+# int computeHorizontalScrollRange()
+# int computeHorizontalScrollExtent()
+# int computeHorizontalScrollOffset()
+}
+
+
+class com.myscript.iink.uireferenceimplementation.Canvas {
+- {static} Style DEFAULT_SVG_STYLE
+- android.graphics.Canvas canvas
+- Paint strokePaint
+- Paint bitmapAlphaPaint
+- Paint clearPaint
+- TextPaint textPaint
+- Paint fillPaint
+- FillRule fillRule
+- Transform transform
+- Matrix transformMatrix
+- float[] transformValues
+- float[] pointsCache
+- Rect simpleRectCache
+- RectF floatRectCache
+- ImageLoader imageLoader
+- OfflineSurfaceManager offlineSurfaceManager
+- boolean clearOnStartDraw
+- List<String> clips
+- Map<String,Typeface> typefaceMap
+- float[] dashArray
+- int dashOffset
+- float xdpi
+- float ydpi
+- Matrix textScaleMatrix
+- Matrix pointScaleMatrix
++ void setCanvas(android.graphics.Canvas)
++ void setClearOnStartDraw(boolean)
+- void applyStyle(Style)
+- {static} int argb(Color)
++ void setTransform(Transform)
++ Transform getTransform()
++ void setStrokeColor(Color)
++ void setStrokeWidth(float)
++ void setStrokeLineCap(LineCap)
++ void setStrokeLineJoin(LineJoin)
++ void setStrokeMiterLimit(float)
++ void setStrokeDashArray(float[])
++ void setStrokeDashOffset(float)
++ void setFillColor(Color)
++ void setFillRule(FillRule)
++ void setDropShadow(float,float,float,Color)
++ void setFontProperties(String,float,float,String,String,int)
++ void startDraw(int,int,int,int)
++ void endDraw()
++ void startGroup(String,float,float,float,float,boolean)
++ void endGroup(String)
++ void startItem(String)
++ void endItem(String)
++ IPath createPath()
++ void drawPath(IPath)
++ void drawRectangle(float,float,float,float)
++ void drawLine(float,float,float,float)
++ void drawObject(String,String,float,float,float,float)
++ void drawText(String,float,float,float,float,float,float)
++ void blendOffscreen(int,float,float,float,float,float,float,float,float,Color)
+}
+
+
+class com.myscript.iink.uireferenceimplementation.FontMetricsProvider {
+- DisplayMetrics displayMetrics
+- TextPaint paint
+- TextPaint paint_
+- Path charPath
+- RectF charBox
+- Map<String,Typeface> typefaceMap
+- LruCache<Pair<FontKey,String>,GlyphMetrics> glyphMetricsCache
+- float y_mm2px(float)
+- float x_px2mm(float)
+- float y_px2mm(float)
+- void updatePaint(int[],Typeface[],int)
++ Rectangle[] getCharacterBoundingBoxes(Text,TextSpan[])
++ float getFontSizePx(Style)
++ boolean supportsGlyphMetrics()
+- GlyphMetrics getGlyphMetrics(FontKey,String,IValueProvider<GlyphMetrics>)
+- StaticLayout getLayout(SpannableString)
++ GlyphMetrics[] getGlyphMetrics(Text,TextSpan[])
+}
+
+
+class com.myscript.iink.uireferenceimplementation.FontMetricsProvider$FontKey {
+~ String family
+~ int style
+~ int size
++ int hashCode()
++ boolean equals(Object)
+}
+
+
+interface com.myscript.iink.uireferenceimplementation.FontMetricsProvider$IValueProvider {
+~ T get()
+}
+
+class com.myscript.iink.uireferenceimplementation.Path {
++ EnumSet<OperationType> unsupportedOperations()
++ void curveTo(float,float,float,float,float,float)
++ void arcTo(float,float,float,boolean,boolean,float,float)
++ void closePath()
+}
+
+class com.myscript.iink.uireferenceimplementation.EditorBinding {
+- Engine engine
+- Map<String,Typeface> typefaces
+- InputController inputController
+- void bindEditor(EditorView,Editor)
++ EditorData openEditor(EditorView)
+}
+
+
+class com.myscript.iink.uireferenceimplementation.ImagePainter {
+- ImageLoader imageLoader
+- Map<String,Typeface> typefaceMap
+- Bitmap bitmap
+# android.graphics.Canvas canvas
+- float dpi
+- int backgroundColor
++ void setImageLoader(ImageLoader)
++ void setTypefaceMap(Map<String,Typeface>)
++ void setBackgroundColor(int)
++ ICanvas createCanvas()
++ void prepareImage(int,int,float)
++ void saveImage(String)
+}
+
+
+class com.myscript.iink.uireferenceimplementation.ContextualActionsHelper {
++ {static} EnumSet<ContextualActions> getAvailableActionsForBlock(Editor,ContentBlock)
++ {static} EnumSet<ContextualActions> getAvailableActionsForSelection(Editor,ContentSelection)
+}
+
+class com.myscript.iink.uireferenceimplementation.EditorData {
+- Editor editor
+- Renderer renderer
+- InputController inputController
++ Editor getEditor()
++ Renderer getRenderer()
++ InputController getInputController()
+}
+
+
+class com.myscript.iink.uireferenceimplementation.InputController {
++ {static} int INPUT_MODE_NONE
++ {static} int INPUT_MODE_FORCE_PEN
++ {static} int INPUT_MODE_FORCE_TOUCH
++ {static} int INPUT_MODE_AUTO
++ {static} int INPUT_MODE_ERASER
+- {static} float SCALING_SENSIBILITY
+- {static} float SCALING_THRESHOLD
+- EditorView editorView
+- Editor editor
+- int _inputMode
+- GestureDetectorCompat gestureDetector
+- ScaleGestureDetector scaleGestureDetector
+- IInputControllerListener _listener
+- long eventTimeOffset
++ PointerType iinkPointerType
+- ViewListener _viewListener
+- boolean isScalingEnabled
+- float getPreviousScalingSpan
+- float previousScalingFocusX
+- float previousScalingFocusY
+- boolean isMultiFingerTouch
+- int previousPointerId
++ void setInputMode(int)
++ int getInputMode()
++ void setViewListener(ViewListener)
++ void setListener(IInputControllerListener)
++ void setScalingEnabled(boolean)
++ IInputControllerListener getListener()
+- boolean handleOnTouchForPointer(MotionEvent,int,int)
++ boolean onTouch(View,MotionEvent)
++ boolean onDown(MotionEvent)
++ void onShowPress(MotionEvent)
++ boolean onSingleTapUp(MotionEvent)
++ void onLongPress(MotionEvent)
++ boolean onScroll(MotionEvent,MotionEvent,float,float)
++ boolean onFling(MotionEvent,MotionEvent,float,float)
++ boolean onScale(ScaleGestureDetector)
++ boolean onScaleBegin(ScaleGestureDetector)
++ void onScaleEnd(ScaleGestureDetector)
+}
+
+
+interface com.myscript.iink.uireferenceimplementation.InputController$ViewListener {
+~ void showScrollbars()
+}
+
+class com.myscript.iink.uireferenceimplementation.FontUtils {
++ {static} Map<String,Typeface> loadFontsFromAssets(AssetManager)
++ {static} Map<String,Typeface> loadFontsFromAssets(AssetManager,String)
++ {static} int getTypefaceStyle(String,String,int)
++ {static} int getTypefaceStyle(Style)
++ {static} Typeface getTypeface(String,int)
++ {static} Typeface getTypeface(String,String,String,int)
++ {static} Typeface getTypeface(Style)
++ {static} Typeface getTypeface(Map<String,Typeface>,String,String,String,int)
++ {static} String getFontFamily(AssetManager,String)
+}
+
+enum com.myscript.iink.uireferenceimplementation.ContextualActions {
++  ADD_BLOCK
++  REMOVE
++  CONVERT
++  COPY
++  PASTE
++  EXPORT
++  FORMAT_TEXT
+}
+
+class com.myscript.iink.uireferenceimplementation.CustomTextSpan {
++ {static} Creator<CustomTextSpan> CREATOR
+- Typeface mTypeface
++ int describeContents()
++ void updateDrawState(TextPaint)
++ void updateMeasureState(TextPaint)
+- void applyCustomTypeFace(TextPaint)
+}
+
+
+class com.myscript.iink.uireferenceimplementation.SmartGuideView {
+- {static} String TAG
+- {static} int SMART_GUIDE_FADE_OUT_DELAY_WRITE_IN_DIAGRAM_DEFAULT
+- {static} int SMART_GUIDE_FADE_OUT_DELAY_WRITE_DEFAULT
+- {static} int SMART_GUIDE_FADE_OUT_DELAY_OTHER_DEFAULT
+- {static} int SMART_GUIDE_HIGHLIGHT_REMOVAL_DELAY_DEFAULT
+- Typeface wordViewTypeface
+- Editor editor
+- ParameterSet exportParams
+- ParameterSet importParams
+- ContentBlock activeBlock
+- ContentBlock selectedBlock
+- SmartGuideWord[] words
+- float density
+- int removeHighlightDelay
+- int fadeOutWriteInDiagramDelay
+- int fadeOutWriteDelay
+- int fadeOutOtherDelay
+- Handler fadeOutTimerHandler
+- Runnable fadeOutTimerRunnable
+- MenuListener moreMenuListener
++ void setTypeface(Typeface)
++ void setEditor(Editor)
++ void setMenuListener(MenuListener)
+# void onAttachedToWindow()
+# void onDetachedFromWindow()
++ void partChanging(Editor,ContentPart,ContentPart)
++ void partChanged(Editor)
++ void contentChanged(Editor,String[])
++ void onError(Editor,String,EditorError,String)
++ void selectionChanged(Editor)
++ void activeBlockChanged(Editor,String)
++ void viewTransformChanged(Renderer)
++ void onClick(View)
+- void update(ContentBlock,UpdateCause)
+- void computeModificationOfWords(SmartGuideWord[],SmartGuideWord[])
+- ContentBlock getBlock()
+}
+
+
+interface com.myscript.iink.uireferenceimplementation.SmartGuideView$MenuListener {
+~ void onMoreMenuClicked(float,float,String)
+}
+
+enum com.myscript.iink.uireferenceimplementation.UpdateCause {
++  VISUAL
++  EDIT
++  SELECTION
++  VIEW
+}
+
+class com.myscript.iink.uireferenceimplementation.SmartGuideView$SmartGuideWord {
+- String label
+- String[] candidates
+- boolean modified
+}
+
+class com.myscript.iink.uireferenceimplementation.SmartGuideView$SmartGuideWordView {
+- SmartGuideWord word
+- int index
+- Handler removeHighlightTimerHandler
+- Runnable removeHighlightTimerRunnable
+- void init(SmartGuideWord,int)
+- boolean updateWord(int,String)
++ void onClick(View)
+}
+
+
+class com.myscript.iink.uireferenceimplementation.OfflineSurfaceManager {
+- int nextID
+- SparseArray<Bitmap> offlineSurfaces
++ int create(int,int,boolean)
++ void release(int)
++ Bitmap getBitmap(int)
+}
+
+
+class com.myscript.iink.uireferenceimplementation.JiixDefinitions {
+}
+class com.myscript.iink.uireferenceimplementation.JiixDefinitions$Padding {
++ float left
++ float right
+}
+
+class com.myscript.iink.uireferenceimplementation.JiixDefinitions$Word {
++ {static} String LABEL_FIELDNAME
++ String label
++ String[] candidates
++ String reflowlabel
+}
+
+class com.myscript.iink.uireferenceimplementation.JiixDefinitions$Result {
++ {static} String WORDS_FIELDNAME
++ Word[] words
+}
+
+class com.myscript.iink.uireferenceimplementation.ImageLoader {
+- Editor editor
+~ LruCache<String,Bitmap> cache
+~ {static} float CACHE_MAX_MEMORY_RATIO
++ Editor getEditor()
++ Bitmap getImage(String,String,int,int)
+- Pair<Bitmap,Boolean> renderObject(String,String,int,int)
+}
+
+
+interface com.myscript.iink.uireferenceimplementation.IInputControllerListener {
+~ boolean onLongPress(float,float,String)
+}
+
+interface com.myscript.iink.uireferenceimplementation.ISizeListener {
+~ void sizeChanged(int,int)
+}
+
+
+
+com.myscript.iink.uireferenceimplementation.FrameTimeEstimator +.. com.myscript.iink.uireferenceimplementation.FrameTimeEstimator$Api21Impl
+com.myscript.iink.uireferenceimplementation.FrameTimeEstimator +.. com.myscript.iink.uireferenceimplementation.FrameTimeEstimator$Api23Impl
+com.myscript.iink.uireferenceimplementation.FrameTimeEstimator +.. com.myscript.iink.uireferenceimplementation.FrameTimeEstimator$Api30Impl
+com.myscript.iink.IRenderTarget <|.. com.myscript.iink.uireferenceimplementation.EditorView
+com.myscript.iink.uireferenceimplementation.ViewListener <|.. com.myscript.iink.uireferenceimplementation.EditorView
+android.widget.FrameLayout <|-- com.myscript.iink.uireferenceimplementation.EditorView
+android.view.View <|-- com.myscript.iink.uireferenceimplementation.LayerView
+com.myscript.iink.graphics.ICanvas <|.. com.myscript.iink.uireferenceimplementation.Canvas
+com.myscript.iink.text.IFontMetricsProvider <|.. com.myscript.iink.uireferenceimplementation.FontMetricsProvider
+com.myscript.iink.uireferenceimplementation.FontMetricsProvider +.. com.myscript.iink.uireferenceimplementation.FontMetricsProvider$FontKey
+com.myscript.iink.uireferenceimplementation.FontMetricsProvider +.. com.myscript.iink.uireferenceimplementation.FontMetricsProvider$IValueProvider
+com.myscript.iink.graphics.IPath <|.. com.myscript.iink.uireferenceimplementation.Path
+com.myscript.iink.uireferenceimplementation.Path <|-- com.myscript.iink.uireferenceimplementation.Path
+com.myscript.iink.IImagePainter <|.. com.myscript.iink.uireferenceimplementation.ImagePainter
+com.myscript.iink.uireferenceimplementation.OnTouchListener <|.. com.myscript.iink.uireferenceimplementation.InputController
+com.myscript.iink.uireferenceimplementation.OnGestureListener <|.. com.myscript.iink.uireferenceimplementation.InputController
+com.myscript.iink.uireferenceimplementation.OnScaleGestureListener <|.. com.myscript.iink.uireferenceimplementation.InputController
+com.myscript.iink.uireferenceimplementation.InputController +.. com.myscript.iink.uireferenceimplementation.InputController$ViewListener
+android.text.style.TextAppearanceSpan <|-- com.myscript.iink.uireferenceimplementation.CustomTextSpan
+com.myscript.iink.IEditorListener <|.. com.myscript.iink.uireferenceimplementation.SmartGuideView
+com.myscript.iink.IRendererListener <|.. com.myscript.iink.uireferenceimplementation.SmartGuideView
+com.myscript.iink.uireferenceimplementation.OnClickListener <|.. com.myscript.iink.uireferenceimplementation.SmartGuideView
+android.widget.LinearLayout <|-- com.myscript.iink.uireferenceimplementation.SmartGuideView
+com.myscript.iink.uireferenceimplementation.SmartGuideView +.. com.myscript.iink.uireferenceimplementation.SmartGuideView$MenuListener
+com.myscript.iink.uireferenceimplementation.SmartGuideView +.. com.myscript.iink.uireferenceimplementation.SmartGuideView$SmartGuideWord
+com.myscript.iink.uireferenceimplementation.SmartGuideView +.. com.myscript.iink.uireferenceimplementation.SmartGuideView$SmartGuideWordView
+com.myscript.iink.uireferenceimplementation.OnClickListener <|.. com.myscript.iink.uireferenceimplementation.SmartGuideView$SmartGuideWordView
+com.myscript.iink.uireferenceimplementation.AppCompatTextView <|-- com.myscript.iink.uireferenceimplementation.SmartGuideView$SmartGuideWordView
+com.myscript.iink.uireferenceimplementation.JiixDefinitions +.. com.myscript.iink.uireferenceimplementation.JiixDefinitions$Padding
+com.myscript.iink.uireferenceimplementation.JiixDefinitions +.. com.myscript.iink.uireferenceimplementation.JiixDefinitions$Word
+com.myscript.iink.uireferenceimplementation.JiixDefinitions +.. com.myscript.iink.uireferenceimplementation.JiixDefinitions$Result
+@enduml
